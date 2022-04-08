@@ -2,6 +2,7 @@
 #+AUTHOR: Dang Quang Vu
 
 * Getting Started
+** Introduction
 - Đầu tiên để có thể sử dụng tốt một ngôn ngữ nào đó thì chúng ta phải biết các
   công cụ (tool) phổ biến của ngôn ngữ đó. Tool là yếu tố chính của trải nghiệm
   sử dụng một ngôn ngữ nào đó.
@@ -12,6 +13,7 @@
   sẽ hữu ích trong hành trình học rust của chúng ta. Một số nó được xây dựng bởi
   các nhà phát triên Rust, và phần lớn được xây dựng và duy trì bởi cộng đồng.
 ** Intall the Rust ToolChain
+*** Install
 - Install Rust:
 #+begin_src
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -19,7 +21,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 - Khi cài đặt Rust bạn sẽ được cài luôn bộ công cụ của Rust là rustup được mặc
   định.
-** Compilation Targets
+*** Compilation Targets
 - Mục đích chính của trình biên dịch Rust là chuyển đổi mã Rust thành =Machine
   Code=, một tập hợp các lệnh hướng dẫn mà CPU và OS của bạn có thể hiểu được.
 - Do đó, bạn cần một phần phụ trợ backend khác của Rust Compiler cho mỗi target
@@ -27,3 +29,74 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
   một bộ phụ trợ khác.
 - Rust cố gắng hỗ trợ một loạt các platform khác nhau thành các cấp bậc, từ cấp
   1 "Guaranteed-to-work" tới Level 3 "Best-effort"
+  + Bạn có thể xem bản full tại đây [[https://doc.rust-lang.org/nightly/rustc/platform-support.html][Here]]
+
+*** What Toolchains Do we need?
+- Bạn có thể cập nhập hoặc cài đặt toolchain thông qua rustup, ngoài ra rustup
+  còn giúp bạn có cài nhìn tổng quan về những cái mà bạn đã cài đặt trên hệ
+  thống của bạn.
+- Bạn có thể kiểm tra các toolchain bằng cách sử dụng CL:
+  #+begin_src
+rustc --version
+  #+end_src
+
+  #+begin_src
+cargo --version
+  #+end_src
+
+** Project Setup
+*** Init Projects
+- Bạn có thể khởi tạo một dự án rust thông qua cargo-cli:
+  #+begin_src
+cargo new nameproject
+  #+end_src
+
+*** Optimization Project
+- Trong khi thực hiện project chúng ta sẽ thường lặp lại các bước giống nhau:
+  + Chỉnh sửa Code
+  + Compile the Application
+  + Running Test
+  + Run the Application
+- Đây được gọi là =inner development loop=
+  + Nếu mất 5 phút để compile và run app, bạn có thể hoàn thành nhiều nhất 12
+    lần lặp trong 1 giờ. Nếu bạn giảm nó xuống còn 2 phút thì bạn có thể thực
+    hiện 30 lần lặp lại trong 1 giờ.
+  + Rust nó không giúp chúng ta làm được điều này - Tốc độ biên dịch của Rust có
+    thể trở thành một nút thắc cổ trai trong các dự án lớn. Hãy xem chúng ta có
+    thể làm được gì để giảm thiểu vấn đề này trước khi tiêp tục nhé.
+**** Faster Linking
+- Khi nghỉ tới =inner development loop= bạn sẽ cố gắng xem xét vấn đề hiệu suất
+  của quá trình compile - mất bao lâu để xây dựng lại binary file sau khi thay
+  đổi 1 điều gì đó trong source code.
+- Một khoảng thời gian lớn trong đó được dành cho =linking phase - assembling= các
+  tệp binary ở output.
+- Trình liên kết mặc định hoạt động cũng tốt, nhưng chúng ta sẽ có các lựa chọn
+  thay thế nhanh hơn tuỳ thuộc vào OS của các bạn.
+
+  #+begin_src
+# .cargo/config.toml
+
+# On Windows
+# ```
+# cargo install -f cargo-binutils
+# rustup component add llvm-tools-preview
+# ```
+[target.x86_64-pc-windows-msvc]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+[target.x86_64-pc-windows-gnu]
+rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+
+# On Linux:
+# - Ubuntu, `sudo apt-get install lld clang`
+# - Arch, `sudo pacman -S lld clang`
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "linker=clang", "-C", "link-arg=-fuse-ld=lld"]
+
+# On MacOS, `brew install michaeleisel/zld/zld`
+[target.x86_64-apple-darwin]
+rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/zld"]
+[target.aarch64-apple-darwin]
+rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/zld"]
+  #+end_src
+
+****
