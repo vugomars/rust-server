@@ -52,6 +52,7 @@ cargo new nameproject
   #+end_src
 
 *** Optimization Project
+**** Inner Development Loop
 - Trong khi thực hiện project chúng ta sẽ thường lặp lại các bước giống nhau:
   + Chỉnh sửa Code
   + Compile the Application
@@ -99,4 +100,26 @@ rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/zld"]
 rustflags = ["-C", "link-arg=-fuse-ld=/usr/local/bin/zld"]
   #+end_src
 
-****
+**** Cargo-watch
+- Chúng ta có thể giảm thiểu được thêm 1 ít thời gian bằng các giảm thời gian
+  thực hiện compile. Thay vì bạn sẽ phải vào terminal thực hiện lệnh compile
+  hoặc check, thì bạn có thể sử dụng cargo watch để tự động làm điều đó tương tự
+  như nodemon trong express.
+- Cài đặt Cargo-watch
+  #+begin_src
+cargo install cargo-watch
+  #+end_src
+- Cargo watch sẽ quan sát sources code của bạn nếu có thay đổi nó sẽ kích hoạt
+  mỗi lệnh bạn muốn chạy. Ví dụ:
+  #+begin_src
+cargo watch -x check
+  #+end_src
+  + Nó sẽ giúp bạn chạy lệnh check sau khi bạn có sự thay đổi nào đó trong
+    source code.
+- Check - test - run
+#+begin_src
+cargo watch -x check -x test -x run
+#+end_src
+  + Nó sẽ giúp bạn chạy lệnh check sau đó tới test và run sau khi bạn có sự thay đổi nào đó trong
+    source code với điều kiện các lệnh trước được hoàn thành.
+
