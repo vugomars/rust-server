@@ -1,0 +1,29 @@
+#+title: Building a Server with Rust
+#+AUTHOR: Dang Quang Vu
+
+* Getting Started
+- Đầu tiên để có thể sử dụng tốt một ngôn ngữ nào đó thì chúng ta phải biết các
+  công cụ (tool) phổ biến của ngôn ngữ đó. Tool là yếu tố chính của trải nghiệm
+  sử dụng một ngôn ngữ nào đó.
+- Do đó bộ tool nên được coi là mối quan tâm hàng đầu khi thiết kế một ngôn ngữ
+  nào đó và giảng dạy nó.
+- Cộng đồng Rust đã đặt việc phát triển các Tool hỗ trợ kể từ ngày đầu thành
+  lập, bây giờ chúng ta sẽ dạo một vòng ngắn gọn một số bộ công cụ và tiện ích
+  sẽ hữu ích trong hành trình học rust của chúng ta. Một số nó được xây dựng bởi
+  các nhà phát triên Rust, và phần lớn được xây dựng và duy trì bởi cộng đồng.
+** Intall the Rust ToolChain
+- Install Rust:
+#+begin_src
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+#+end_src
+
+- Khi cài đặt Rust bạn sẽ được cài luôn bộ công cụ của Rust là rustup được mặc
+  định.
+** Compilation Targets
+- Mục đích chính của trình biên dịch Rust là chuyển đổi mã Rust thành =Machine
+  Code=, một tập hợp các lệnh hướng dẫn mà CPU và OS của bạn có thể hiểu được.
+- Do đó, bạn cần một phần phụ trợ backend khác của Rust Compiler cho mỗi target
+  biên dịch, tức là mỗi nền tảng như Linux, MacOs hay Window64-bits bạn phải cài
+  một bộ phụ trợ khác.
+- Rust cố gắng hỗ trợ một loạt các platform khác nhau thành các cấp bậc, từ cấp
+  1 "Guaranteed-to-work" tới Level 3 "Best-effort"
